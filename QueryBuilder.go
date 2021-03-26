@@ -178,3 +178,14 @@ queryValues := b.val.args
 	}
 	return res
 }
+
+func (b QueryBuilder) Count() int{
+	b.val.columns = nil
+	b.val.columns = append(b.val.columns,"COUNT(*) AS total")
+	var total int
+	err := b.val.db.QueryRow(b.buildQuery(1), b.val.args...).Scan(&total)
+	if err != nil {
+		panic(err.Error()) // proper error handling instead of panic in your app
+	}
+	return total
+}
