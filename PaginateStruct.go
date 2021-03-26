@@ -6,5 +6,5 @@ type PaginateModel struct {
 	TotalPages int
 	CurrentPage int
 	ResultsPerPage int
-	rows *sql.Rows
+	Rows *sql.Rows
 }
