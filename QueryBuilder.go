@@ -203,9 +203,3 @@ var paginateModel PaginateModel
 	return paginateModel
 }
 
-type PaginateModel struct {
-	TotalPages int
-	CurrentPage int
-	ResultsPerPage int
-	rows *sql.Rows
-}
