@@ -57,6 +57,16 @@ func (b QueryBuilder) Where(column string,value string) QueryBuilder {
 	return b
 }
 
+func (b QueryBuilder) WhereInt64(column string,value int64) QueryBuilder {
+	if b.val.whereStatement == "" {
+		b.val.whereStatement = " WHERE " + column + " = ? "
+	}else{
+		b.val.whereStatement += " AND " + column + " = ? "
+	}
+	b.val.args = append(b.val.args,value)
+	return b
+}
+
 func (b QueryBuilder) OrWhere(column string,value string) QueryBuilder {
 		b.val.whereStatement += " OR " + column + " = ? "
 	b.val.args = append(b.val.args,value)
