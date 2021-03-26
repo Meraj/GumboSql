@@ -27,4 +27,5 @@ func main(){
 	queryBuilder.Where("name","jafar").First() // return *sql.Row
 	queryBuilder.Limit(5,0).OrderBy("name", "DESC").Get() // return *sql.Rows
 	queryBuilder.Where("name","jafar").Update([]string{"name"},[]string{"moji"}) // update
+	queryBuilder.Where("name","jafar").OrWhere("name","moji").First()
 }
