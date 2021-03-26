@@ -204,7 +204,7 @@ totalPages := int(math.Ceil(float64(b.Count() / itemsPerPage)))
 limitInt := (currentPage -1) * itemsPerPage
 b.Limit(itemsPerPage,limitInt)
 var paginateModel PaginateModel
-	paginateModel.TotalPages = totalPages
+	paginateModel.TotalPages = totalPages + 1
 	paginateModel.CurrentPage = currentPage
 	paginateModel.ResultsPerPage = itemsPerPage
 	paginateModel.Rows = b.Get()
