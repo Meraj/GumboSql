@@ -199,7 +199,7 @@ var paginateModel PaginateModel
 	paginateModel.TotalPages = totalPages
 	paginateModel.CurrentPage = currentPage
 	paginateModel.ResultsPerPage = itemsPerPage
-	paginateModel.rows = b.Get()
+	paginateModel.Rows = b.Get()
 	return paginateModel
 }
 
