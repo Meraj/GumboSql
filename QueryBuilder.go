@@ -2,6 +2,7 @@ package GumboSql
 
 import (
 	"database/sql"
+	"math"
 	"strconv"
 )
 
@@ -188,4 +189,23 @@ func (b QueryBuilder) Count() int{
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 	return total
+}
+
+func (b QueryBuilder) Paginate(itemsPerPage int, currentPage int) PaginateModel {
+totalPages := int(math.Ceil(float64(b.Count() / itemsPerPage)))
+limitInt := (currentPage -1) * itemsPerPage
+b.Limit(itemsPerPage,limitInt)
+var paginateModel PaginateModel
+	paginateModel.TotalPages = totalPages
+	paginateModel.CurrentPage = currentPage
+	paginateModel.ResultsPerPage = itemsPerPage
+	paginateModel.rows = b.Get()
+	return paginateModel
+}
+
+type PaginateModel struct {
+	TotalPages int
+	CurrentPage int
+	ResultsPerPage int
+	rows *sql.Rows
 }
