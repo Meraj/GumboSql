@@ -2,6 +2,7 @@ package GumboSql
 
 import (
 	"database/sql"
+	"strconv"
 )
 
 type QueryBuilder struct {
@@ -13,6 +14,7 @@ type Variables struct {
 	table          string
 	columns        []string
 	values         []string
+	setColumns []string
 	whereStatement string
 	orderBy        string
 	limitOffset    string
@@ -66,8 +68,8 @@ func (b QueryBuilder) OrderBy(column string, orderType string) QueryBuilder {
 }
 
 
-func (b QueryBuilder) Limit(limit int, offset int) QueryBuilder {
-b.val.limitOffset =" LIMIT " + string(limit) + " OFFSET " + string(offset)
+func (b QueryBuilder) Limit(limit_int int, offset_int int) QueryBuilder {
+b.val.limitOffset =" LIMIT " + strconv.Itoa(limit_int) + " OFFSET " + strconv.Itoa(offset_int)
 	return b
 }
 
@@ -105,6 +107,15 @@ func (b QueryBuilder) buildQuery(SqlType int) string {
 			}
 		}
 		query += " FROM " + b.val.table + " "
+		break
+	case 2:
+		query = "UPDATE " + b.val.table +" SET "
+		for i := range b.val.setColumns {
+			query += b.val.setColumns[i] + " = ?,"
+		}
+		if last := len(query) - 1; last >= 0 && query[last] == ',' {
+			query = query[:last]
+		}
 		break
 	}
 	if b.val.whereStatement != "" {
@@ -148,4 +159,22 @@ func (b QueryBuilder) Get() *sql.Rows {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 	return row
+}
+
+func (b QueryBuilder) Update(columns []string, values []string) sql.Result {
+b.val.setColumns = columns
+queryValues := b.val.args
+	b.val.args = nil
+	for i := range values {
+		b.val.args = append(b.val.args,values[i])
+	}
+	for i := range queryValues {
+		b.val.args = append(b.val.args,queryValues[i])
+	}
+	query := b.buildQuery(2)
+	res, err := b.val.db.Exec(query, b.val.args...)
+	if err != nil {
+		panic(err.Error()) // proper error handling instead of panic in your app
+	}
+	return res
 }

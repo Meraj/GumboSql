@@ -22,6 +22,9 @@ func main(){
 	queryBuilder = queryBuilder.QueryBuilder(db)
 	queryBuilder = queryBuilder.Table("table_two")
 	queryBuilder.Insert([]string{"name", "user_code"},[]string{"jafar", "5"})
-	queryBuilder.Where("name","jafar").Limit(10,0).Get() // return *sql.Rows
-	queryBuilder.Where("name","jafar").Limit(10,0).First() // return *sql.Row
+	queryBuilder.Insert([]string{"name", "user_code"},[]string{"mamad", "2"})
+	queryBuilder.Insert([]string{"name", "user_code"},[]string{"reza", "3"})
+	queryBuilder.Where("name","jafar").First() // return *sql.Row
+	queryBuilder.Limit(5,0).OrderBy("name", "DESC").Get() // return *sql.Rows
+	queryBuilder.Where("name","jafar").Update([]string{"name"},[]string{"moji"}) // update
 }
