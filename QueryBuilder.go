@@ -140,11 +140,9 @@ func (b QueryBuilder) buildQuery(SqlType int) string {
 	}
 	return query
 }
-func (b QueryBuilder) Insert(columns []string, values []string) int64 {
+func (b QueryBuilder) Insert(columns []string, values ...interface{}) int64 {
 	b.val.columns = columns
-	for i := range values {
-		b.val.args = append(b.val.args,values[i])
-	}
+	b.val.args = values
 	query := b.buildQuery(0)
 	res, err := b.val.db.Exec(query, b.val.args...)
 	if err != nil {
@@ -172,7 +170,7 @@ func (b QueryBuilder) Get() *sql.Rows {
 	return row
 }
 
-func (b QueryBuilder) Update(columns []string, values []string) sql.Result {
+func (b QueryBuilder) Update(columns []string, values ...interface{}) sql.Result {
 b.val.setColumns = columns
 queryValues := b.val.args
 	b.val.args = nil

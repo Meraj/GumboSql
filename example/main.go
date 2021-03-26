@@ -21,11 +21,11 @@ func main(){
 	var queryBuilder GumboSql.QueryBuilder
 	queryBuilder = queryBuilder.QueryBuilder(db)
 	queryBuilder = queryBuilder.Table("table_two")
-	queryBuilder.Insert([]string{"name", "user_code"},[]string{"jafar", "5"})
-	queryBuilder.Insert([]string{"name", "user_code"},[]string{"mamad", "2"})
-	queryBuilder.Insert([]string{"name", "user_code"},[]string{"reza", "3"})
+	queryBuilder.Insert([]string{"name", "user_code"},"jafar", 5)
+	queryBuilder.Insert([]string{"name", "user_code"},"mamad", 2)
+	queryBuilder.Insert([]string{"name", "user_code"},"reza", "3")
 	queryBuilder.Where("name","jafar").First() // return *sql.Row
 	queryBuilder.Limit(5,0).OrderBy("name", "DESC").Get() // return *sql.Rows
-	queryBuilder.Where("name","jafar").Update([]string{"name"},[]string{"moji"}) // update
+	queryBuilder.Where("name","jafar").Update([]string{"name"},"moji") // update
 	queryBuilder.Where("name","jafar").OrWhere("name","moji").First()
 }
