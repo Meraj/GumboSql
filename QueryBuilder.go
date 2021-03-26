@@ -9,12 +9,14 @@ type QueryBuilder struct {
 	val Variables
 }
 type Variables struct {
-	db *sql.DB
+	db             *sql.DB
 	table          string
 	columns        []string
 	values         []string
 	whereStatement string
-	args []interface{}
+	orderBy        string
+	limitOffset    string
+	args           []interface{}
 }
 func (b QueryBuilder) QueryBuilder(db *sql.DB) QueryBuilder {
 	b.val.db = db
@@ -58,6 +60,17 @@ func (b QueryBuilder) OrWhere(column string,value string) QueryBuilder {
 		return b
 }
 
+func (b QueryBuilder) OrderBy(column string, orderType string) QueryBuilder {
+	b.val.orderBy = "ORDER BY " + column + " " + orderType
+	return b
+}
+
+
+func (b QueryBuilder) Limit(limit int, offset int) QueryBuilder {
+b.val.limitOffset =" LIMIT " + string(limit) + " OFFSET " + string(offset)
+	return b
+}
+
 func (b QueryBuilder) buildQuery(SqlType int) string {
 	 query := ""
 	switch SqlType {
@@ -97,6 +110,12 @@ func (b QueryBuilder) buildQuery(SqlType int) string {
 	if b.val.whereStatement != "" {
 		query += " " + b.val.whereStatement
 	}
+	if b.val.orderBy != "" {
+		query += " " + b.val.orderBy
+	}
+	if b.val.limitOffset != "" {
+		query += " " + b.val.limitOffset
+	}
 	return query
 }
 func (b QueryBuilder) Insert(columns []string, values []string) int64 {
@@ -118,6 +137,15 @@ func (b QueryBuilder) Insert(columns []string, values []string) int64 {
 	return 0
 }
 
-func (b QueryBuilder) ToSql() string {
-	return b.buildQuery(1)
+func (b QueryBuilder) First() *sql.Row {
+	row := b.val.db.QueryRow(b.buildQuery(1), b.val.args...)
+	return row
+}
+
+func (b QueryBuilder) Get() *sql.Rows {
+	row, err := b.val.db.Query(b.buildQuery(1), b.val.args...)
+	if err != nil {
+		panic(err.Error()) // proper error handling instead of panic in your app
+	}
+	return row
 }

@@ -18,9 +18,10 @@ func main(){
 	dbCreator.Init()
 
 	// query builder
-	var queryBuilder Gogoli.QueryBuilder
+	var queryBuilder GumboSql.QueryBuilder
 	queryBuilder = queryBuilder.QueryBuilder(db)
 	queryBuilder = queryBuilder.Table("table_two")
 	queryBuilder.Insert([]string{"name", "user_code"},[]string{"jafar", "5"})
-
+	queryBuilder.Where("name","jafar").Limit(10,0).Get() // return *sql.Rows
+	queryBuilder.Where("name","jafar").Limit(10,0).First() // return *sql.Row
 }
