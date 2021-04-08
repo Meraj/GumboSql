@@ -58,13 +58,13 @@ func (b QueryBuilder) Where(column string,value interface{}) QueryBuilder {
 }
 
 
-func (b QueryBuilder) OrWhere(column string,value string) QueryBuilder {
+func (b QueryBuilder) OrWhere(column string,value interface{}) QueryBuilder {
 		b.val.whereStatement += " OR " + column + " = ? "
 	b.val.args = append(b.val.args,value)
 		return b
 }
 
-func (b QueryBuilder) WhereWithOperation(column string,operation string,value string) QueryBuilder {
+func (b QueryBuilder) WhereWithOperation(column string,operation string,value interface{}) QueryBuilder {
 	if b.val.whereStatement == "" {
 		b.val.whereStatement = " WHERE " + column + " " + operation +" ? "
 	}else{
@@ -74,7 +74,7 @@ func (b QueryBuilder) WhereWithOperation(column string,operation string,value st
 	return b
 }
 
-func (b QueryBuilder) OrWhereWithOperation(column string,operation string,value string) QueryBuilder {
+func (b QueryBuilder) OrWhereWithOperation(column string,operation string,value interface{}) QueryBuilder {
 	b.val.whereStatement += " OR " + column + " " + operation + " ? "
 	b.val.args = append(b.val.args,value)
 	return b
