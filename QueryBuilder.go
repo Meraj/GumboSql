@@ -47,7 +47,7 @@ func (b QueryBuilder) SelectColumns(column []string) QueryBuilder {
 	return b
 }
 
-func (b QueryBuilder) Where(column string,value string) QueryBuilder {
+func (b QueryBuilder) Where(column string,value interface{}) QueryBuilder {
 	if b.val.whereStatement == "" {
 		b.val.whereStatement = " WHERE " + column + " = ? "
 	}else{
@@ -57,20 +57,27 @@ func (b QueryBuilder) Where(column string,value string) QueryBuilder {
 	return b
 }
 
-func (b QueryBuilder) WhereInt64(column string,value int64) QueryBuilder {
-	if b.val.whereStatement == "" {
-		b.val.whereStatement = " WHERE " + column + " = ? "
-	}else{
-		b.val.whereStatement += " AND " + column + " = ? "
-	}
-	b.val.args = append(b.val.args,value)
-	return b
-}
 
 func (b QueryBuilder) OrWhere(column string,value string) QueryBuilder {
 		b.val.whereStatement += " OR " + column + " = ? "
 	b.val.args = append(b.val.args,value)
 		return b
+}
+
+func (b QueryBuilder) WhereWithOperation(column string,operation string,value string) QueryBuilder {
+	if b.val.whereStatement == "" {
+		b.val.whereStatement = " WHERE " + column + " " + operation +" ? "
+	}else{
+		b.val.whereStatement += " AND " + column + " " + operation +" ? "
+	}
+	b.val.args = append(b.val.args,value)
+	return b
+}
+
+func (b QueryBuilder) OrWhereWithOperation(column string,operation string,value string) QueryBuilder {
+	b.val.whereStatement += " OR " + column + " " + operation + " ? "
+	b.val.args = append(b.val.args,value)
+	return b
 }
 
 func (b QueryBuilder) OrderBy(column string, orderType string) QueryBuilder {

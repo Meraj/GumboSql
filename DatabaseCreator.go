@@ -32,6 +32,16 @@ func (dc DatabaseCreator) Column(name string, dataType string) DatabaseCreator {
 dc.query_str += name + " " + dataType +","
 	return dc
 }
+
+func (dc DatabaseCreator) ID() DatabaseCreator {
+	dc.query_str += "id INT (255) NOT NULL AUTO_INCREMENT,PRIMARY KEY (id),"
+	return dc
+}
+func (dc DatabaseCreator) BigID() DatabaseCreator {
+	dc.query_str += "id BIGINT (20) NOT NULL AUTO_INCREMENT,PRIMARY KEY (id),"
+	return dc
+}
+
 func (dc DatabaseCreator) Init(){
 	if last := len(dc.query_str) - 1; last >= 0 && dc.query_str[last] == ',' {
 		dc.query_str = dc.query_str[:last]
