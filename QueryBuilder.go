@@ -2,6 +2,7 @@ package GumboSql
 
 import (
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"math"
 	"strconv"
 )
@@ -199,7 +200,7 @@ func (b QueryBuilder) Count() int{
 	b.val.columns = nil
 	b.val.columns = append(b.val.columns,"COUNT(*) AS total")
 	var total int
-	err := b.val.db.QueryRow(b.buildQuery(1), b.val.args...).Scan(&total)
+	err := b.First().Scan(&total)
 	if err != nil {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
@@ -218,3 +219,6 @@ var paginateModel PaginateModel
 	return paginateModel
 }
 
+func (b QueryBuilder) Execute(query string, args ...interface{}) (sql.Result, error) {
+	return b.val.db.Exec(query, args)
+}
