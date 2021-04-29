@@ -217,6 +217,6 @@ func (b QueryBuilder) Paginate(itemsPerPage int, currentPage int) PaginateModel 
 	return paginateModel
 }
 
-func (b QueryBuilder) ExecuteRead(query string, args ...interface{}) (*sql.Rows, error) {
-	return b.val.db.Query(query, args)
+func (b QueryBuilder) Execute(query string, args ...interface{}) (sql.Result, error) {
+	return b.val.db.Exec(query, args)
 }
