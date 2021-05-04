@@ -39,20 +39,19 @@ func (dc DatabaseCreator) ID() DatabaseCreator {
 	return dc
 }
 func (dc DatabaseCreator) Integer(name string) DatabaseCreator {
-	dc.Column(name, "INT (255)")
-	return dc
+	return dc.Column(name, "INT (255)")
 }
 
 func (dc DatabaseCreator) String(name string) DatabaseCreator {
-	dc.Column(name, "VARCHAR (255)")
-	return dc
+	return dc.Column(name, "VARCHAR (255)")
 }
 
 func (dc DatabaseCreator) DateTime(name string) DatabaseCreator {
-	dc.Column(name, "DATETIME")
-	return dc
+	return dc.Column(name, "DATETIME")
 }
-
+func (dc DatabaseCreator) Text(name string) DatabaseCreator {
+	return dc.Column(name, "Text")
+}
 func (dc DatabaseCreator) Init() {
 	if last := len(dc.query_str) - 1; last >= 0 && dc.query_str[last] == ',' {
 		dc.query_str = dc.query_str[:last]
