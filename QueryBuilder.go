@@ -58,6 +58,35 @@ func (b QueryBuilder) Where(column string, value interface{}) QueryBuilder {
 	return b
 }
 
+func (b QueryBuilder) WhereIsNull(column string) QueryBuilder {
+	if b.val.whereStatement == "" {
+		b.val.whereStatement = " WHERE " + column + " IS NULL "
+	} else {
+		b.val.whereStatement += " AND " + column + " IS NULL "
+	}
+	return b
+}
+
+func (b QueryBuilder) OrWhereIsNull(column string) QueryBuilder {
+	b.val.whereStatement += " OR " + column + " IS NULL "
+	return b
+}
+
+func (b QueryBuilder) WhereIsNotNull(column string) QueryBuilder {
+	if b.val.whereStatement == "" {
+		b.val.whereStatement = " WHERE " + column + " IS NOT NULL "
+	} else {
+		b.val.whereStatement += " AND " + column + " IS NULL "
+	}
+	return b
+}
+
+func (b QueryBuilder) OrWhereIsNotNull(column string) QueryBuilder {
+	b.val.whereStatement += " OR " + column + " IS NOT NULL "
+	return b
+}
+
+
 func (b QueryBuilder) OrWhere(column string, value interface{}) QueryBuilder {
 	b.val.whereStatement += " OR " + column + " = ? "
 	b.val.args = append(b.val.args, value)
