@@ -163,6 +163,9 @@ func (b QueryBuilder) buildQuery(SqlType int) string {
 			query = query[:last]
 		}
 		break
+
+	case 3:
+		query = "DELETE FROM " + b.val.table + " "
 	}
 	if b.val.whereStatement != "" {
 		query += " " + b.val.whereStatement
@@ -223,6 +226,19 @@ func (b QueryBuilder) Update(columns []string, values ...interface{}) sql.Result
 	return res
 }
 
+func (b QueryBuilder) Delete() int64 {
+	query := b.buildQuery(3)
+	res, err := b.val.db.Exec(query, b.val.args...)
+	if err != nil{
+		print(err.Error())
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		print(err.Error())
+	}
+	return count
+
+}
 func (b QueryBuilder) Count() int {
 	b.val.columns = nil
 	b.val.columns = append(b.val.columns, "COUNT(*) AS total")
