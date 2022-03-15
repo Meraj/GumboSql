@@ -178,21 +178,20 @@ func (b QueryBuilder) buildQuery(SqlType int) string {
 	}
 	return query
 }
-func (b QueryBuilder) Insert(columns []string, values ...interface{}) int64 {
-	b.val.columns = columns
-	b.val.args = values
-	query := b.buildQuery(0)
-	res, err := b.val.db.Exec(query, b.val.args...)
-	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
-	} else {
-		id, err := res.LastInsertId()
-		if err == nil {
-
-			return id
-		}
+func (qb QueryBuilder) Insert(theData map[string]interface{}) (interface{}, error) {
+	qb.vars.args = nil
+	qb.vars.columns = nil
+	for key, element := range theData {
+		qb.vars.columns = append(qb.vars.columns, key)
+		qb.vars.args = append(qb.vars.args, element)
 	}
-	return 0
+	var id interface{}
+	err := qb.DB.QueryRow(qb.buildQuery(0), qb.vars.args...).Scan(&id)
+	qb.vars.args = nil
+	if err != nil {
+		id = 0
+	}
+	return id, err
 }
 
 func (b QueryBuilder) First() *sql.Row {
